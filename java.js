@@ -1,4 +1,4 @@
-// QD ON CLIQUE SUR "C" AVEC CURRENT2 DIFF DE 0 ALORS SUPP QUE CURRENT2
+// ------------------------- VARIABLES -------------------------
 
 const screen = document.querySelector('.screen');
 const numbers = document.querySelectorAll('.number');
@@ -14,85 +14,24 @@ var total = 0;
 var current = 0;
 var current_2 = 0;
 var operateSelect = "";
-// POUR DEBLOQUER UN MAX-LENGTH > OPERATE + NUMBER > SAUF QUE SI ON A PAS DE ONOFF, LE NUMBER NE LAISSE JAMAIS PASSER
-var onoff = 0; 
-// POUR QUE LE DEMI-CANCEL PASSE A TRAVERS LA 1ERE CONDITION DE NUMBERS
-var passTest1 = 0;
+
+var onoff = 0; // DEBLOQUE LE MAX-LENGTH > OPERATE + NUMBER > SAUF QUE SI ON A PAS DE ONOFF, LE NUMBER NE LAISSE JAMAIS PASSER
+var forceTest1 = 0; // ORIENTE LE DEMI-CANCEL DANS LES CONDITIONS NUMBER
+var forceTest2 = 0; // ORIENTE LA SORTIE DE EQUAL 
 
 
-function add (first, second) {
-  total = first + second;
-} 
-function sub (first, second){
-  total = first - second;
-}
-function multiply (first, second){
-  total = first * second;
-}
-function div (first, second){
-  total =  first / second;
-}
+// ------------------------- FUNCTIONS -------------------------
 
-purcent.addEventListener('click', () => {
+
+function toHigh (){ // NOMBRE TROP GRAND > RELOAD
   if(screen.textContent === "Too high !") return basicReload();
-  screen.textContent = screen.textContent/100;
-})
-
-negation.addEventListener('click', () => {
-  if(screen.textContent === "Too high !") return basicReload();
-  if (screen.textContent === "0") return 0;
-  if (parseFloat(screen.textContent) < 0) return screen.textContent = Math.abs(screen.textContent);
-  screen.textContent = `-${screen.textContent}`;
-});
-
-numbers.forEach(number => number.addEventListener('click', () => {
-  initialAllColor()
-// Z = OPERATE ; 1 = CURRENT ; 2 = CURRENT_2
-  if(screen.textContent.length >= 7) screen.style.fontSize = '40px';
-  if(screen.textContent.length >= 10 && onoff === 0) return;
-  if(screen.textContent === "Too high !") return basicReload();
-// SI UN OPERATE EST MIS TROP TOT (1 = 0 ; 2 = 0; Z = 1)
-  if (operateSelect !== "" && screen.textContent==="0" && passTest1===0){
-    screen.textContent = number.textContent;
-    operateSelect = "";
-// JUSTE APRES UN OPERATE (1 = 1 ; 2 = 0; Z = 1)
-  } else if(operateSelect !== "" && current_2 === 0){  
-    screen.textContent = number.textContent;
-    current_2 = parseFloat(screen.textContent);
-    screen.style.fontSize = '64px';
-    passTest1 = 0;
-// CUMULE LE 2EME NOMBRE (1 = 1 ; 2 = 1; Z = 1)
-  } else if (operateSelect !== "") {
-    if(screen.textContent.length >2) onoff = 0;
-    return screen.textContent += number.textContent;
-// INITIALISE ET CUMULE (1 = 0 ; 2 = 0 ; 2 = 0)
-  } else {
-    if(screen.textContent==="0"){
-      screen.textContent = number.textContent;
-    } else {
-      if(screen.textContent.length >2) onoff = 0;
-      screen.textContent += number.textContent;
-    }
-  } 
-}))
-
-function test(p){
-if (p.textContent === operateSelect) clickColor(p);
 }
 
-cancel.addEventListener('click', () => {
-  if (current_2 !== 0){
-    current_2 = 0
-    screen.textContent = "0";
-    passTest1 = 1;
-    operates.forEach(operate => test(operate))
-  } else {
-    initialAllColor()
-    basicReload ()
-  }
-  });
+function test(p){ // EN CAS DE DEMI-CANCEL, REMETTRE LE CHANGEMENT CSS SUR LE BON OPERATE
+  if(p.textContent === operateSelect) clickColor(p);
+}
 
-function basicReload (){
+function basicReload (){ // RESTAURE LES PARAMETRES PAR DEFAUT
   screen.style.fontSize = '64px'
   screen.textContent = "0";
   current = 0;
@@ -100,51 +39,34 @@ function basicReload (){
   operateSelect="";
 }
 
-function initialColor (p1){
+function initialColor (p1){ // CSS INITAL DES BOUTONS OPERATEURS
   p1.style.color = "white";
   p1.style.backgroundColor = "#fe9e0a";
 }
 
-function clickColor (p1) {
+function clickColor (p1) { // CSS QD UN OPERANDE EST SELECTIONNE
   p1.style.color = "#fe9e0a";
   p1.style.backgroundColor = "white";
 }
 
-function initialAllColor(){
-    cssOperate.forEach(css => initialColor(css))
+function initialAllColor(){ // APPLIQUE LE CSS INITIAL A TOUS LES OPERATEURS
+  cssOperate.forEach(css => initialColor(css))
 }
 
-operates.forEach(operate => operate.addEventListener('click', () => {
-  if(screen.textContent === "Too high !") return basicReload();
-  onoff = 1;
-  initialAllColor()
-  clickColor(operate)
-// 2 NOMBRES STOCKES
-  if(current_2 !== 0 && current !== 0) {
-    result()
-    operateSelect = operate.textContent;
-    current = total;
-    current_2 = 0;
-// 1ER OPERATE
-  } else {
-  operateSelect = operate.textContent;
-  current = parseFloat(screen.textContent);
-  }
-  if (parseFloat(screen.textContent) >= 99999999999) return screen.textContent = "Too high !";
-}))
+function add (first, second) { // ADDITION
+  total = first + second;
+} 
+function sub (first, second){ // SOUSTRACTION
+  total = first - second;
+}
+function multiply (first, second){ // MULTIPLICATION
+  total = first * second;
+}
+function div (first, second){ // DIVISION
+  total =  first / second;
+}
 
-
-equal.addEventListener('click', () =>{
-  initialAllColor();
-  if(screen.textContent === "Too high !") return basicReload();
-  if(operateSelect === "") return screen.textContent;
-  result();
-  current = 0;
-  current_2 = 0;
-  operateSelect = "";
-})
-
-function result (){
+function result (){ // RESULTAT
   current_2 = parseFloat(screen.textContent);
   switch (operateSelect) {
     case "+":
@@ -160,15 +82,115 @@ function result (){
       div(current, current_2);
     break;
   }
-  if (parseFloat(total) >= 99999999999) return screen.textContent = "Too high !";
-  if(total.toString().length >= 7) screen.style.fontSize = '40px';
+  arrTotal = Math.round(total * 100000) / 100000; 
+  if(arrTotal.toString().length >= 7) screen.style.fontSize = '40px'; // PRINCIPALEMENT POUR LES NOMBRES A VIRGULE
   if(total > 9999999) screen.style.fontSize = '40px';
-  screen.textContent = Math.round(total * 100000) / 100000;
-}
+  if (parseFloat(total) >= 99999999999) return screen.textContent = "Too high !";
+  screen.textContent = arrTotal;
+  }
 
+
+// ------------------------- BOUTTONS -------------------------
+
+
+// BOUTON POURCENTAGE
+purcent.addEventListener('click', () => {
+  toHigh();
+  screen.textContent = screen.textContent/100;
+})
+
+// BOUTON CHANGEMENT DE SIGNE
+negation.addEventListener('click', () => {
+  toHigh();
+  if (screen.textContent === "0") return 0; 
+  if (parseFloat(screen.textContent) < 0) return screen.textContent = Math.abs(screen.textContent);
+  screen.textContent = `-${screen.textContent}`;
+});
+
+// BOUTON SUPPRIMER
+cancel.addEventListener('click', () => {
+  // DEMI-CANCEL (LA PERSONNE CE TROMPE SUR SON 2ÈME CHIFFRE)
+  if (current_2 !== 0){
+    current_2 = 0
+    screen.textContent = "0";
+    forceTest1 = 1;
+    operates.forEach(operate => test(operate))
+  // FULL CANCEL
+  } else {
+    initialAllColor()
+    basicReload ()
+  }
+  });
+
+// BUTTONS CHIFFRES
+numbers.forEach(number => number.addEventListener('click', () => {
+// (LEGENDE : Z = OPERATE ; 1 = CURRENT ; 2 = CURRENT_2)
+  initialAllColor()
+  if(screen.textContent.length >= 7) screen.style.fontSize = '40px'; // POUR NE PAS DEPASSER LA TAILLE DE L'ECRAN
+  if(screen.textContent.length >= 10 && onoff === 0) return; // LIMITE DE L'ECRAN
+  toHigh();
+// SI UN OPERATE EST MIS TROP TOT (1 = 0 ; 2 = 0; Z = 1)
+  if (operateSelect !== "" && screen.textContent==="0" && forceTest1===0){
+    screen.textContent = number.textContent;
+    operateSelect = "";
+// JUSTE APRES UN OPERATE (1 = 1 ; 2 = 0; Z = 1)
+  } else if(operateSelect !== "" && current_2 === 0){  
+    screen.textContent = number.textContent;
+    current_2 = parseFloat(screen.textContent);
+    screen.style.fontSize = '64px';
+    forceTest1 = 0;
+// CUMULE LE 2EME NOMBRE (1 = 1 ; 2 = 1; Z = 1)
+  } else if (operateSelect !== "") {
+    if(screen.textContent.length >2) onoff = 0;
+    return screen.textContent += number.textContent;
+// INITIALISE ET CUMULE (1 = 0 ; 2 = 0 ; 2 = 0)
+  } else {
+    if(screen.textContent==="0" || forceTest2 ===1){
+      screen.textContent = number.textContent;
+      forceTest2 = 0;
+    } else {
+      if(screen.textContent.length >2) onoff = 0;
+      screen.textContent += number.textContent;
+    }
+  } 
+}))
+
+// BUTTONS OPERATEURS
+operates.forEach(operate => operate.addEventListener('click', () => {
+  toHigh();
+  onoff = 1;
+  initialAllColor()
+  clickColor(operate)
+// 2 NOMBRES STOCKES
+  if(current_2 !== 0 && current !== 0) {
+    result()
+    operateSelect = operate.textContent;
+    current = total;
+    current_2 = 0;
+// 1 NOMBRE INSCRIT
+  } else {
+  operateSelect = operate.textContent;
+  current = parseFloat(screen.textContent);
+  }
+  if (parseFloat(screen.textContent) >= 99999999999) return screen.textContent = "Too high !";
+}))
+
+// BUTTON EGAL
+equal.addEventListener('click', () =>{
+  initialAllColor();
+  toHigh();
+  if(operateSelect === "") return screen.textContent;
+  result();
+  current = 0;
+  current_2 = 0;
+  operateSelect = "";
+  forceTest2 = 1;
+})
+
+// BUTTON POINT
 dot.addEventListener('click', () => {
   let eachDigit = screen.textContent.split('');
-  for (digit of eachDigit){
+  for (digit of eachDigit){ // EMPECHE DE POUVOIR METTRE PLUSIEURS POINTS
     if (digit === ".") return;
   }
   screen.textContent += ".";
