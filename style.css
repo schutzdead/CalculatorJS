@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    position:fixed ;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0; 
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    background-color: black;
+}
+
+h1{
+    text-align: center;
+    margin-top:100px;
+    color : white;
+    font-size: 74px;
+    text-shadow: 0 0 4px white;
+}
+
+.calculator{
+    background-color:  black;
+    display: flex;
+    flex-direction: column;
+    width: 290px;
+    margin-top: 80px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    border-radius: 35px;
+    border: 3px solid #333333;
+    box-shadow: 0 0 10px #333333;
+}
+
+.screen{
+    background-color: black;
+    color : white;
+    margin: 35px 20px 0 20px;
+    height: 95px;
+    display: flex;
+    justify-content: right;
+    align-items: flex-end;
+    border-radius: 20px;
+    font-size: 64px;
+    font-family: Roboto, sans-serif;
+    overflow: hidden;
+}
+
+.buttons{
+    display: flex;
+    margin: 20px;
+    flex-wrap: wrap;
+    row-gap: 20px;
+    column-gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.button{
+    background-color: #333333;
+    color: white;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 0 3px #333333;
+}
+
+.button1 {
+    background-color: #a5a5a5;
+    color: black;
+    box-shadow: 0 0 3px #a5a5a5;
+}
+
+.button2{
+ background-color: #fe9e0a;
+ font-size: 30px;
+ box-shadow: 0 0 3px #fe9e0a;
+ transition: background-color 0.3s, color 0.2s;
+}
+
+#fuckoff{
+    font-size: 20px;
+}
+
+#highButton {
+    width: 118px;
+    border-radius: 35px;
+    justify-content: left;
+    padding-left: 13px;
+    box-sizing: border-box;
+}
+
+.button:hover {
+    cursor:grab;
+    filter: brightness(115%);
+}
+
+.number:hover{
+    filter: brightness(140%);
+}
+
+.number:active{
+    background-color: #333333;
+}
+
+#dot:hover{
+    filter: brightness(140%);
+}
+
